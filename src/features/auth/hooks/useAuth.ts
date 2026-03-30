@@ -1,10 +1,14 @@
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
 import { logout } from '../store/authSlice'
+import { clearNotifications } from '@/store/notificationSlice'
 
 /**
  * Convenience hook: exposes current auth state + logout action.
- * Components should use this instead of reading Redux state directly.
+ *
+ * Logout dispatch sequence (cross-slice example):
+ *  1. logout()             → xóa auth state + localStorage
+ *  2. clearNotifications() → xóa toàn bộ toast queue
  */
 export function useAuth() {
   const dispatch = useAppDispatch()
@@ -14,6 +18,9 @@ export function useAuth() {
     user,
     isAuthenticated,
     token,
-    logout: () => dispatch(logout()),
+    logout: () => {
+      dispatch(logout())
+      dispatch(clearNotifications())
+    },
   }
 }

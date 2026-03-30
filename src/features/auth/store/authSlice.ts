@@ -26,7 +26,11 @@ const authSlice = createSlice({
       state.token = action.payload.token
       state.isAuthenticated = true
     },
-    /** Clear session – also clears localStorage */
+    /**
+     * Clear session — also clears localStorage.
+     * NOTE: clearNotifications phải dispatch riêng từ useAuth hook,
+     * vì một slice không được import slice khác (tránh circular dependency).
+     */
     logout(state) {
       state.user = null
       state.token = null
